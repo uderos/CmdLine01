@@ -50,6 +50,14 @@ const std::string & CmdLineArgument::get_value_str(const std::size_t idx /*=0*/)
   return (*value_str_ptr);
 }
 
+bool CmdLineArgument::has_value(const std::size_t idx /*=0*/) const
+{
+  const bool has_value = (idx < m_value_str_list.size()) ||
+                         ((idx == 0) && (!m_default_value_str.empty()));
+  return has_value;
+                         
+}
+
 
 
 } // namepspace cmdline

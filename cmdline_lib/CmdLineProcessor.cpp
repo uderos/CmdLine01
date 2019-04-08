@@ -32,9 +32,18 @@ void CmdLineProcessor::parse(const int argc, const char *argv[])
 
     for (const auto & elem : m_param_map)
     {
-      std::cout << "UBEDEBUG Passing '" << input_str << "' to " << elem.first << std::endl; // UBEDEBUG
       const bool processed = elem.second->parse(input_str);
       if (processed) break;
+    }
+  }
+  
+  for (const auto & elem : m_param_map)
+  {
+    if (elem.second->is_mandatory() && (elem.second->counter() == 0))
+    {
+      std::ostringstream oss;
+      oss << "CmdLine: Mandatory parameter '" << elem.first << "' not found";
+      throw std::runtime_error(oss.str());
     }
   }
 }
@@ -64,7 +73,25 @@ std::string CmdLineProcessor::to_string() const // debug purpose only
   oss << "CmdLineProcessor: n=" << m_param_map.size() << std::endl;
   for (const auto & elem : m_param_map)
   {
-    oss << "\t" << elem.first << " c=" << elem.second->counter() << std::endl;
+    std::string separator;
+    const unsigned int n = elem.second->counter();
+
+    oss << "\t" << elem.first << " c=" << elem.second->counter();
+
+    if (elem.second->counter())
+    {
+      oss << " values: ";
+      for (unsigned int idx = 0; idx < n; ++idx)
+      {
+        if (elem.second->has_value(idx))
+        {
+          oss << separator << "'" << elem.second->get_value_str(idx) << "'";
+          separator = "|";
+        }
+      }
+    }
+
+    oss << std::endl;
   }
 
   return oss.str();

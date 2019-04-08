@@ -18,6 +18,7 @@ class CmdLineArgument : public CmdLineParameter
 
     // Queries
     unsigned int counter() const;
+    virtual bool has_value(const std::size_t idx = 0) const override;
     virtual const std::string & get_value_str(const std::size_t idx = 0) const override;
 
   private:

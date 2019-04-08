@@ -18,7 +18,9 @@ class CmdLineParameter
     CmdLineParameter & mandatory();
 
     // Queries
+    const bool is_mandatory() const;
     virtual unsigned int counter() const = 0;
+    virtual bool has_value(const std::size_t idx = 0) const;
     virtual const std::string & get_value_str(const std::size_t idx = 0) const;
 
     // Infrastructure

@@ -1,0 +1,12 @@
+#!/bin/sh
+
+set -v
+
+TIMESTAMP=`date +%Y%m%d-%H%M%S`
+ROOT_DIR=~/tests/cmdline
+TARBALL="$ROOT_DIR/udr-cmdline-$TIMESTAMP.tgz"
+
+tar --exclude="*.tgz" --exclude="*.tar" -czvf $TARBALL ./*
+
+ls -als $TARBALL
+

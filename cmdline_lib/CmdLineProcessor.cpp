@@ -39,6 +39,11 @@ void CmdLineProcessor::parse(const int argc, const char *argv[])
   }
 }
 
+const CmdLineParameter & CmdLineProcessor::operator[](const std::string & long_name) const
+{
+  return m_get_parameter(long_name);
+}
+
 const CmdLineParameter & CmdLineProcessor::m_get_parameter(const std::string & long_name) const
 {
   const auto it = m_param_map.find(long_name);

@@ -26,7 +26,7 @@ static void f_test02()
 
   std::cout << "Checking values ..." << std::endl;
   std::cout << "Number of flag1 flags=" << cmdl["flag1"].counter() << std::endl;
-  std::cout << "arg1 value[0] = " << cmdl.get_value<int>(std::string("arg1")) << std::endl;
+  std::cout << "arg1 value[0] = " << cmdl.get_value<int>("arg1") << std::endl;
 }
 
 

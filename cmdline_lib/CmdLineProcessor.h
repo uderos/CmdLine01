@@ -24,6 +24,7 @@ class CmdLineProcessor
     // Infrastructure
     void parse(const int argc, const char *argv[]);
 
+    const CmdLineParameter & operator[](const std::string & long_name) const;
     template <typename T> T get_value(const std::string & long_name,
                                       const std::size_t idx = 0) const;
 

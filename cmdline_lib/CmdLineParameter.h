@@ -11,6 +11,7 @@ namespace cmdline {
 class CmdLineParameter
 {
   public:
+    virtual ~CmdLineParameter() = default;
 
     // Set properties
     CmdLineParameter & short_name(const std::string & short_name);
@@ -25,7 +26,6 @@ class CmdLineParameter
   protected:
 
     CmdLineParameter(const std::string & long_name);
-    virtual ~CmdLineParameter() = default;
 
     struct parsing_data_t
     {

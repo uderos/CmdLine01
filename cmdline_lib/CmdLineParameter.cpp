@@ -8,7 +8,6 @@ namespace cmdline {
 CmdLineParameter::CmdLineParameter(const std::string & long_name) : 
   m_long_name(long_name),
   m_mandatory(false)
-  // m_counter(0)
 {
 }
 
@@ -53,22 +52,11 @@ bool CmdLineParameter::parse(const std::string & input_str)
   }
 }
 
-//bool CmdLineParameter::m_name_match(const std::string & input_str, 
-//                                    const std::string & param_name) const
-//{
-//  bool match = false;
-//  if (param_name.size() >= input_str.size())
-//  {
-//  }
-//
-//  return match;
-//}
-
 CmdLineParameter::parsing_data_t 
 CmdLineParameter::m_parse_tokens(const std::string & input_str) const
 {
   const std::string long_name = std::string("--") + m_long_name;
-  const std::string short_name = std::string("-") + m_short_name;
+  const std::string short_name = (m_short_name.empty() ? m_short_name : std::string("-") + m_short_name);
 
   parsing_data_t parsing_data;
   std::string::size_type value_idx = std::string::npos;

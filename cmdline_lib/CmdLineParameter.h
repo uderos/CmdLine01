@@ -19,6 +19,7 @@ class CmdLineParameter
 
     // Queries
     virtual unsigned int counter() const = 0;
+    virtual const std::string & get_value_str(const std::size_t idx = 0) const;
 
     // Infrastructure
     bool parse(const std::string & input_str);
@@ -42,10 +43,7 @@ class CmdLineParameter
     const std::string m_long_name;
     std::string m_short_name;
     bool m_mandatory;
-    //unsigned int m_counter;
-    
-//    bool m_name_match(const std::string & input_str, 
-//                      const std::string & param_name) const;
+
     parsing_data_t m_parse_tokens(const std::string & input_str) const;
     virtual void m_process_tokens(const parsing_data_t & data) = 0;
 

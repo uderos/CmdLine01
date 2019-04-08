@@ -53,46 +53,40 @@ static void f_test01()
   { 
     udr::cmdline::CmdLineArgument p("param");
     p.default_value("123");
-    const int v = p.get_value<int>();
-    std::cout << "line_" << __LINE__ << " V=" << v << std::endl;
+    std::cout << "line_" << __LINE__ << " Vstr=" << p.get_value_str() << std::endl;
   }
 
   {
     udr::cmdline::CmdLineArgument p("param");
     p.parse("--param=234");
-    const int v = p.get_value<int>();
-    std::cout << "line_" << __LINE__ << " V=" << v << std::endl;
+    std::cout << "line_" << __LINE__ << " Vstr=" << p.get_value_str() << std::endl;
   }
 
   {
     udr::cmdline::CmdLineArgument p("param");
     p.short_name("p");
     p.parse("-p 345");
-    const int v = p.get_value<int>();
-    std::cout << "line_" << __LINE__ << " V=" << v << std::endl;
+    std::cout << "line_" << __LINE__ << " Vstr=" << p.get_value_str() << std::endl;
   }
 
   {
     udr::cmdline::CmdLineArgument p("param");
     p.short_name("p");
     p.parse("-p 4.56");
-    const float v = p.get_value<float>();
-    std::cout << "line_" << __LINE__ << " V=" << v << std::endl;
+    std::cout << "line_" << __LINE__ << " Vstr=" << p.get_value_str() << std::endl;
   }
 
   {
     udr::cmdline::CmdLineArgument p("bool_param");
     p.parse("--bool_param=1");
-    const bool v = p.get_value<int>();
-    std::cout << "line_" << __LINE__ << " V=" << v << std::endl;
+    std::cout << "line_" << __LINE__ << " Vstr=" << p.get_value_str() << std::endl;
   }
 
   try
   {
     udr::cmdline::CmdLineArgument p("param");
     p.parse("--param=QQQQ");
-    const int v = p.get_value<int>();
-    std::cout << "line_" << __LINE__ << " V=" << v << std::endl;
+    std::cout << "line_" << __LINE__ << " Vstr=" << p.get_value_str() << std::endl;
   }
   catch (const std::exception & exh)
   {
@@ -106,13 +100,10 @@ static void f_test01()
     p.parse("-p 22");
     p.parse("-q 00");
     p.parse("-p 33");
-    const int v1 = p.get_value<int>(0);
-    const int v2 = p.get_value<int>(1);
-    const int v3 = p.get_value<int>(2);
     std::cout << "line_" << __LINE__ << " counter=" << p.counter() << std::endl;
-    std::cout << "line_" << __LINE__ << " V1=" << v1 << std::endl;
-    std::cout << "line_" << __LINE__ << " V2=" << v2 << std::endl;
-    std::cout << "line_" << __LINE__ << " V3=" << v3 << std::endl;
+    std::cout << "line_" << __LINE__ << " Vstr0=" << p.get_value_str(0) << std::endl;
+    std::cout << "line_" << __LINE__ << " Vstr1=" << p.get_value_str(1) << std::endl;
+    std::cout << "line_" << __LINE__ << " Vstr2=" << p.get_value_str(2) << std::endl;
   }
 
   try
@@ -166,7 +157,7 @@ static void f_test01()
     udr::cmdline::CmdLineArgument p("param");
     p.parse("--param = 99");
     std::cout << "line_" << __LINE__ << " counter=" << p.counter() << std::endl;
-    std::cout << "line_" << __LINE__ << " v=" << p.get_value<int>() << std::endl;
+    std::cout << "line_" << __LINE__ << " Vstr=" << p.get_value_str() << std::endl;
   }
   catch (const std::exception & exh)
   {
@@ -176,16 +167,14 @@ static void f_test01()
   {
     udr::cmdline::CmdLineArgument p("param");
     p.parse("--param=XYZ");
-    const std::string v = p.get_value<std::string>();
-    std::cout << "line_" << __LINE__ << " V=" << v << std::endl;
+    std::cout << "line_" << __LINE__ << " Vstr=" << p.get_value_str() << std::endl;
   }
 
   {
     udr::cmdline::CmdLineArgument p("param");
     p.short_name("p");
     p.parse("-p xyz");
-    const std::string v = p.get_value<std::string>();
-    std::cout << "line_" << __LINE__ << " V=" << v << std::endl;
+    std::cout << "line_" << __LINE__ << " Vstr=" << p.get_value_str() << std::endl;
   }
 
 }

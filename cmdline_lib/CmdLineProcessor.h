@@ -64,26 +64,23 @@ T CmdLineProcessor::get_value(const std::string & long_name,
                               const std::size_t idx /*= 0*/) const
 {
   const CmdLineParameter & p = m_get_parameter(long_name);
+  const std::string & value_str =p.get_value_str(idx);
 
-  /**
-  const auto it = m_param_map.find(long_name);
-  if (it == m_param_map.end())
+  T value;
+  std::istringstream iss(value_str);
+  iss >> value;
+
+  if (!iss)
   {
     std::ostringstream oss;
-    oss << "CmdLine: Requested parameter '" << long_name << "' not defined";
-    throw std::runtime_error(oss.str());
-  }
-  */
-
-  const CmdLineArgument * arg_ptr = dynamic_cast<const CmdLineArgument *>(&p);
-  if (! arg_ptr)
-  {
-    std::ostringstream oss;
-    oss << "CmdLine: Requested parameter '" << long_name << "' is not an argument";
+    oss << "CmdLine: Argument:'" << long_name << "' conversion failure"
+        << " idx:" << idx
+        << " str='" << value_str << "'"
+        << " type=" << typeid(T).name();
     throw std::runtime_error(oss.str());
   }
 
-  return arg_ptr->get_value<T>(idx);
+  return value;
 }
 
 

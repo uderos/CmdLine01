@@ -106,5 +106,12 @@ CmdLineParameter::m_parse_tokens(const std::string & input_str) const
   return parsing_data;
 }
 
+const std::string & CmdLineParameter::get_value_str(const std::size_t /*idx*/ /*=0*/) const
+{
+  std::ostringstream oss;
+  oss << "CmdLine: Parameter '" << m_long_name << " does not supprt values" << std::endl;
+  throw std::runtime_error(oss.str());
+}
+
 } // namepspace cmdline
 } // namespace udr

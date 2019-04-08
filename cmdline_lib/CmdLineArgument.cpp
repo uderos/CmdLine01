@@ -31,6 +31,25 @@ void CmdLineArgument::m_process_tokens(const parsing_data_t & data)
   m_value_str_list.push_back(data.value);
 }
 
+const std::string & CmdLineArgument::get_value_str(const std::size_t idx /*=0*/) const
+{
+  const std::string * value_str_ptr = nullptr;
+
+  if (idx < m_value_str_list.size())
+    value_str_ptr = &(m_value_str_list[idx]);
+  else if ((idx == 0) && (!m_default_value_str.empty()))
+    value_str_ptr = &(m_default_value_str);
+
+  if (!value_str_ptr)
+  {
+    std::ostringstream oss;
+    oss << "CmdLine: Value_" << idx << " not found for parameter " << m_get_long_name();
+    throw std::runtime_error(oss.str());
+  }
+
+  return (*value_str_ptr);
+}
+
 
 
 } // namepspace cmdline

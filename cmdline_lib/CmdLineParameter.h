@@ -1,6 +1,7 @@
 #ifndef UDR_CMDLINE_CLDLINE_PARAM_H
 #define UDR_CMDLINE_CLDLINE_PARAM_H
 
+#include <queue>
 #include <sstream>
 #include <stdexcept>
 #include <string>
@@ -16,6 +17,7 @@ class CmdLineParameter
     // Set properties
     CmdLineParameter & short_name(const std::string & short_name);
     CmdLineParameter & mandatory();
+    virtual CmdLineParameter & default_value(const std::string & default_value);
 
     // Queries
     const bool is_mandatory() const;
@@ -24,7 +26,7 @@ class CmdLineParameter
     virtual const std::string & get_value_str(const std::size_t idx = 0) const;
 
     // Infrastructure
-    bool parse(const std::string & input_str);
+    bool parse(std::queue<std::string> & arg_queue);
 
   protected:
 
@@ -46,7 +48,7 @@ class CmdLineParameter
     std::string m_short_name;
     bool m_mandatory;
 
-    parsing_data_t m_parse_tokens(const std::string & input_str) const;
+    parsing_data_t m_parse_tokens(std::queue<std::string> & arg_queue) const;
     virtual void m_process_tokens(const parsing_data_t & data) = 0;
 
 };

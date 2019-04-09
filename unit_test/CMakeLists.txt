@@ -8,3 +8,7 @@ set(SRC_FILES_02 test02.cpp)
 add_executable(test02 ${SRC_FILES_02})
 TARGET_LINK_LIBRARIES(test02 cmdline_lib)
 
+set(SRC_FILES_03 test03.cpp)
+add_executable(test03 ${SRC_FILES_03})
+TARGET_LINK_LIBRARIES(test03 cmdline_lib)
+

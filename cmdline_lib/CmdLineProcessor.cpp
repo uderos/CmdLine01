@@ -1,4 +1,5 @@
 #include <iostream>
+#include <queue>
 #include <sstream>
 #include <stdexcept>
 #include "CmdLineProcessor.h"
@@ -26,13 +27,15 @@ CmdLineFlag & CmdLineProcessor::AddFlag(const std::string & long_name)
 
 void CmdLineProcessor::parse(const int argc, const char *argv[])
 {
-  for (int i = 0; i < argc; ++i)
-  {
-    const std::string input_str(argv[i]);
+  std::queue<std::string> arg_queue;
+  for (int i = 1; i < argc; ++i)
+    arg_queue.emplace(argv[i]);
 
+  while(!arg_queue.empty())
+  {
     for (const auto & elem : m_param_map)
     {
-      const bool processed = elem.second->parse(input_str);
+      const bool processed = elem.second->parse(arg_queue);
       if (processed) break;
     }
   }

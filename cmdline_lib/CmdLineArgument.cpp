@@ -9,7 +9,7 @@ CmdLineArgument::CmdLineArgument(const std::string & long_name) :
 {
 }
 
-CmdLineArgument & CmdLineArgument::default_value(const std::string & default_value)
+CmdLineParameter & CmdLineArgument::default_value(const std::string & default_value)
 {
   m_default_value_str = default_value;
   return (*this);

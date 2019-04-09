@@ -28,16 +28,23 @@ CmdLineParameter & CmdLineParameter::mandatory()
   return (*this);
 }
 
+CmdLineParameter & CmdLineParameter::default_value(const std::string & default_value)
+{
+  std::ostringstream oss;
+  oss << "CmdLine: Parameter '" << m_long_name << " does not support default values" << std::endl;
+  throw std::runtime_error(oss.str());
+}
+
 const bool CmdLineParameter::is_mandatory() const
 {
   return m_mandatory;
 }
 
-bool CmdLineParameter::parse(const std::string & input_str)
+bool CmdLineParameter::parse(std::queue<std::string> & arg_queue)
 {
   try
   {
-    const parsing_data_t data = m_parse_tokens(input_str);
+    const parsing_data_t data = m_parse_tokens(arg_queue);
 
     if (data.name_found)
     {
@@ -51,14 +58,13 @@ bool CmdLineParameter::parse(const std::string & input_str)
     std::ostringstream oss;
     oss << "PARSING FAILURE"
         << " Paramater: " << m_long_name
-        << " Input: '" << input_str << "'"
         << " Error: " << exh.what();
     throw std::runtime_error(oss.str());
   }
 }
 
 CmdLineParameter::parsing_data_t 
-CmdLineParameter::m_parse_tokens(const std::string & input_str) const
+CmdLineParameter::m_parse_tokens(std::queue<std::string> & arg_queue) const
 {
   const std::string long_name = std::string("--") + m_long_name;
   const std::string short_name = (m_short_name.empty() ? m_short_name : std::string("-") + m_short_name);
@@ -66,40 +72,37 @@ CmdLineParameter::m_parse_tokens(const std::string & input_str) const
   parsing_data_t parsing_data;
   std::string::size_type value_idx = std::string::npos;
 
-  const auto long_name_idx = input_str.find(long_name);
+  const auto long_name_idx = arg_queue.front().find(long_name);
 
   const auto short_name_idx = (short_name.empty() ? 
-      std::string::npos : input_str.find(short_name));
+      std::string::npos : arg_queue.front().find(short_name));
 
   if (long_name_idx != std::string::npos)
   {
     parsing_data.name_found = true;
     const auto name_len = long_name.size();
-    if (name_len < input_str.size())
-      value_idx = input_str.find_first_of('=', name_len);
+    if (name_len < arg_queue.front().size())
+      value_idx = arg_queue.front().find_first_of('=', name_len);
     if ((value_idx != std::string::npos) && 
-        (input_str[value_idx] == '='))
+        (arg_queue.front()[value_idx] == '='))
       ++value_idx;
   }
   else if (short_name_idx != std::string::npos)
   {
     parsing_data.name_found = true;
-    const auto name_len = short_name.size();
-    if (name_len < input_str.size())
+    arg_queue.pop();
+    if (!arg_queue.empty())
     {
-      const auto blank_idx = input_str.find_first_of(' ', name_len);
-      if (blank_idx != std::string::npos)
-        value_idx = input_str.find_first_not_of(' ', blank_idx);
+      value_idx = 0;
     }
   }
 
   if (parsing_data.name_found && 
       (value_idx != std::string::npos))
   {
-    if ((value_idx != std::string::npos) && 
-        (value_idx < input_str.size()))
+    if (value_idx < arg_queue.front().size())
     {
-      parsing_data.value = input_str.substr(value_idx);
+      parsing_data.value = arg_queue.front().substr(value_idx);
       parsing_data.value_found = true;
     }
     else
@@ -107,6 +110,9 @@ CmdLineParameter::m_parse_tokens(const std::string & input_str) const
       throw std::runtime_error("Value parsing error");
     }
   }
+
+  if (parsing_data.name_found)
+    arg_queue.pop();
 
   return parsing_data;
 }

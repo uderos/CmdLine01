@@ -14,7 +14,7 @@ class CmdLineArgument : public CmdLineParameter
     CmdLineArgument(const std::string & long_name);
     virtual ~CmdLineArgument() = default;
 
-    CmdLineArgument & default_value(const std::string & default_value);
+    virtual CmdLineParameter & default_value(const std::string & default_value) override;
 
     // Queries
     unsigned int counter() const;

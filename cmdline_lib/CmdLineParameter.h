@@ -17,16 +17,17 @@ class CmdLineParameter
     // Set properties
     CmdLineParameter & short_name(const std::string & short_name);
     CmdLineParameter & mandatory();
-    virtual CmdLineParameter & default_value(const std::string & default_value);
+    virtual CmdLineParameter & default_value(const std::string & default_value) = 0;
 
     // Queries
     const bool is_mandatory() const;
     virtual unsigned int counter() const = 0;
-    virtual bool has_value(const std::size_t idx = 0) const;
-    virtual const std::string & get_value_str(const std::size_t idx = 0) const;
+    virtual bool has_value(const std::size_t idx = 0) const = 0;
+    virtual const std::string & get_value_str(const std::size_t idx = 0) const = 0;
 
     // Infrastructure
     bool parse(std::queue<std::string> & arg_queue);
+    std::string help_string() const;
 
   protected:
 
@@ -48,9 +49,11 @@ class CmdLineParameter
     std::string m_short_name;
     bool m_mandatory;
 
+    virtual bool m_value_parsing_required() const = 0;
     parsing_data_t m_parse_tokens(std::queue<std::string> & arg_queue) const;
     virtual void m_process_tokens(const parsing_data_t & data) = 0;
 
+    virtual void m_help_string(std::ostream & os) const = 0;
 };
 
 } // namepspace cmdline

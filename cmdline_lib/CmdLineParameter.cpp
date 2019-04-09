@@ -28,13 +28,6 @@ CmdLineParameter & CmdLineParameter::mandatory()
   return (*this);
 }
 
-CmdLineParameter & CmdLineParameter::default_value(const std::string & default_value)
-{
-  std::ostringstream oss;
-  oss << "CmdLine: Parameter '" << m_long_name << " does not support default values" << std::endl;
-  throw std::runtime_error(oss.str());
-}
-
 const bool CmdLineParameter::is_mandatory() const
 {
   return m_mandatory;
@@ -90,15 +83,18 @@ CmdLineParameter::m_parse_tokens(std::queue<std::string> & arg_queue) const
   else if (short_name_idx != std::string::npos)
   {
     parsing_data.name_found = true;
-    arg_queue.pop();
-    if (!arg_queue.empty())
+    if (m_value_parsing_required())
     {
-      value_idx = 0;
+      arg_queue.pop();
+      if (!arg_queue.empty())
+        value_idx = 0;
     }
   }
 
-  if (parsing_data.name_found && 
-      (value_idx != std::string::npos))
+  if (m_value_parsing_required() &&
+      parsing_data.name_found && 
+      (value_idx != std::string::npos) &&
+      (!arg_queue.empty())) // redundant 
   {
     if (value_idx < arg_queue.front().size())
     {
@@ -111,23 +107,30 @@ CmdLineParameter::m_parse_tokens(std::queue<std::string> & arg_queue) const
     }
   }
 
-  if (parsing_data.name_found)
+  if (parsing_data.name_found && (!arg_queue.empty()))
     arg_queue.pop();
 
   return parsing_data;
 }
 
-const std::string & CmdLineParameter::get_value_str(const std::size_t /*idx*/ /*=0*/) const
-{ 
+std::string CmdLineParameter::help_string() const
+{
   std::ostringstream oss;
-  oss << "CmdLine: Parameter '" << m_long_name << " does not supprt values" << std::endl;
-  throw std::runtime_error(oss.str());
+
+  oss << (m_mandatory ? '<' : '[');
+
+  oss << "--" << m_long_name;
+
+  if (!m_short_name.empty())
+    oss << "(-" << m_short_name << ")";
+
+  m_help_string(oss);
+
+  oss << (m_mandatory ? '>' : ']');
+
+  return oss.str();
 }
 
-bool CmdLineParameter::has_value(const std::size_t /*idx = 0*/) const
-{
-  return false;
-}
 
 } // namepspace cmdline
 } // namespace udr

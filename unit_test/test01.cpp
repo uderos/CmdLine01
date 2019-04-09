@@ -9,14 +9,14 @@
 using uint = unsigned int;
 using arg_queue_t = std::queue<std::string>;
 
-static arg_queue_t f_create_arg_queue(const std::vector<std::string> & arg_list)
-{
-  arg_queue_t arg_queue;
-  for (const auto & arg : arg_list)
-    arg_queue.push(arg);
-
-  return arg_queue;
-}
+//static arg_queue_t f_create_arg_queue(const std::vector<std::string> & arg_list)
+//{
+//  arg_queue_t arg_queue;
+//  for (const auto & arg : arg_list)
+//    arg_queue.push(arg);
+//
+//  return arg_queue;
+//}
 
 static void f_test02()
 {

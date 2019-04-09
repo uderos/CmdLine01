@@ -22,11 +22,13 @@ class CmdLineProcessor
     CmdLineFlag & AddFlag(const std::string & long_name);
 
     // Infrastructure
-    void parse(const int argc, const char *argv[]);
+    std::vector<std::string> parse(const int argc, const char *argv[]);
 
     const CmdLineParameter & operator[](const std::string & long_name) const;
     template <typename T> T get_value(const std::string & long_name,
                                       const std::size_t idx = 0) const;
+
+    std::string help_string(const std::string & header) const;
 
     std::string to_string() const; // debug purpose only
 

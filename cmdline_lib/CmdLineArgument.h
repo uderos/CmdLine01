@@ -25,7 +25,9 @@ class CmdLineArgument : public CmdLineParameter
     std::string m_default_value_str;
     std::vector<std::string> m_value_str_list;
 
+    virtual bool m_value_parsing_required() const override;
     virtual void m_process_tokens(const parsing_data_t & data);
+    virtual void m_help_string(std::ostream & os) const override;
 };
 
 } // namepspace cmdline

@@ -58,6 +58,17 @@ bool CmdLineArgument::has_value(const std::size_t idx /*=0*/) const
                          
 }
 
+void CmdLineArgument::m_help_string(std::ostream & os) const
+{
+  os << " value";
+  if (!m_default_value_str.empty())
+    os << "=" << m_default_value_str;
+}
+
+bool CmdLineArgument::m_value_parsing_required() const
+{
+  return true;
+}
 
 
 } // namepspace cmdline

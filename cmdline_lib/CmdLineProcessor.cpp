@@ -25,18 +25,25 @@ CmdLineFlag & CmdLineProcessor::AddFlag(const std::string & long_name)
   return m_add_parameter<CmdLineFlag>(long_name);
 }
 
-void CmdLineProcessor::parse(const int argc, const char *argv[])
+std::vector<std::string> CmdLineProcessor::parse(const int argc, const char *argv[])
 {
   std::queue<std::string> arg_queue;
   for (int i = 1; i < argc; ++i)
     arg_queue.emplace(argv[i]);
 
+  std::vector<std::string> unprocessed_list;
   while(!arg_queue.empty())
   {
+    bool processed = false;
     for (const auto & elem : m_param_map)
     {
-      const bool processed = elem.second->parse(arg_queue);
+      processed = elem.second->parse(arg_queue);
       if (processed) break;
+    }
+    if (!processed)
+    {
+      unprocessed_list.push_back(arg_queue.front());
+      arg_queue.pop();
     }
   }
   
@@ -49,6 +56,8 @@ void CmdLineProcessor::parse(const int argc, const char *argv[])
       throw std::runtime_error(oss.str());
     }
   }
+
+  return unprocessed_list;
 }
 
 const CmdLineParameter & CmdLineProcessor::operator[](const std::string & long_name) const
@@ -97,6 +106,15 @@ std::string CmdLineProcessor::to_string() const // debug purpose only
     oss << std::endl;
   }
 
+  return oss.str();
+}
+
+std::string CmdLineProcessor::help_string(const std::string & header) const
+{
+  std::ostringstream oss;
+  oss << header << std::endl;
+  for (const auto & elem : m_param_map)
+    oss << '\t' << elem.second->help_string() << std::endl;
   return oss.str();
 }
 

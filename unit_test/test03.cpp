@@ -8,10 +8,11 @@ using uint = unsigned int;
 static void f_cmdline_config(udr::cmdline::CmdLineProcessor & cmdl)
 {
   cmdl.AddFlag("version").short_name("v");
-  cmdl.AddFlag("help").short_name("h");
+  cmdl.AddFlag("help").short_name("h").global();
   cmdl.AddArgument("verbose").short_name("V").default_value("1");
   cmdl.AddArgument("numerator").short_name("n").mandatory();
   cmdl.AddArgument("denominator").short_name("d").default_value("1");
+  cmdl.AddArgument("arg").short_name("a").default_value("1");
 }
 
 int main(const int argc, const char *argv[])
@@ -22,7 +23,7 @@ int main(const int argc, const char *argv[])
     f_cmdline_config(cmdl);
     auto unprocessed = cmdl.parse(argc, argv);
 
-    std::cout << "CMD_LINE: " << cmdl.to_string() << std::endl;
+    std::cout << "to_string: '" << cmdl.to_string() << "'" << std::endl;
 
     if (cmdl["help"].counter() > 0)
     {

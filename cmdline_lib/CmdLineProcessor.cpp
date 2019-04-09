@@ -27,6 +27,16 @@ CmdLineFlag & CmdLineProcessor::AddFlag(const std::string & long_name)
 
 std::vector<std::string> CmdLineProcessor::parse(const int argc, const char *argv[])
 {
+  const auto unprocessed_list = m_parse_cmdline(argc, argv);
+  
+  if (! m_has_global_params())
+    m_check_missing_params();
+
+  return unprocessed_list;
+}
+
+std::vector<std::string> CmdLineProcessor::m_parse_cmdline(const int argc, const char *argv[])
+{
   std::queue<std::string> arg_queue;
   for (int i = 1; i < argc; ++i)
     arg_queue.emplace(argv[i]);
@@ -46,7 +56,21 @@ std::vector<std::string> CmdLineProcessor::parse(const int argc, const char *arg
       arg_queue.pop();
     }
   }
-  
+
+  return unprocessed_list;
+}
+
+bool CmdLineProcessor::m_has_global_params() const
+{
+  for (const auto & elem : m_param_map)
+    if (elem.second->counter() && elem.second->is_global())
+      return true;
+
+  return false;
+}
+
+void CmdLineProcessor::m_check_missing_params() const
+{
   for (const auto & elem : m_param_map)
   {
     if (elem.second->is_mandatory() && (elem.second->counter() == 0))
@@ -56,8 +80,6 @@ std::vector<std::string> CmdLineProcessor::parse(const int argc, const char *arg
       throw std::runtime_error(oss.str());
     }
   }
-
-  return unprocessed_list;
 }
 
 const CmdLineParameter & CmdLineProcessor::operator[](const std::string & long_name) const
@@ -79,42 +101,29 @@ const CmdLineParameter & CmdLineProcessor::m_get_parameter(const std::string & l
   return *param_ptr;
 }
 
-std::string CmdLineProcessor::to_string() const // debug purpose only
-{
-  std::ostringstream oss;
-  oss << "CmdLineProcessor: n=" << m_param_map.size() << std::endl;
-  for (const auto & elem : m_param_map)
-  {
-    std::string separator;
-    const unsigned int n = elem.second->counter();
-
-    oss << "\t" << elem.first << " c=" << elem.second->counter();
-
-    if (elem.second->counter())
-    {
-      oss << " values: ";
-      for (unsigned int idx = 0; idx < n; ++idx)
-      {
-        if (elem.second->has_value(idx))
-        {
-          oss << separator << "'" << elem.second->get_value_str(idx) << "'";
-          separator = "|";
-        }
-      }
-    }
-
-    oss << std::endl;
-  }
-
-  return oss.str();
-}
-
 std::string CmdLineProcessor::help_string(const std::string & header) const
 {
   std::ostringstream oss;
   oss << header << std::endl;
   for (const auto & elem : m_param_map)
     oss << '\t' << elem.second->help_string() << std::endl;
+  return oss.str();
+}
+
+std::string CmdLineProcessor::to_string() const
+{
+  std::string separator;
+  std::ostringstream oss;
+  for (const auto & elem : m_param_map)
+  {
+    for (std::size_t idx = 0; idx < elem.second->counter(); ++idx)
+    {
+      oss << separator << "--" << elem.first;
+      if (elem.second->has_value(idx))
+          oss << "=" << elem.second->get_value_str(idx);
+      separator = " ";
+    }
+   }
   return oss.str();
 }
 

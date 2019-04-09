@@ -7,7 +7,8 @@ namespace cmdline {
 
 CmdLineParameter::CmdLineParameter(const std::string & long_name) : 
   m_long_name(long_name),
-  m_mandatory(false)
+  m_mandatory(false),
+  m_global(false)
 {
 }
 
@@ -28,9 +29,20 @@ CmdLineParameter & CmdLineParameter::mandatory()
   return (*this);
 }
 
-const bool CmdLineParameter::is_mandatory() const
+bool CmdLineParameter::is_mandatory() const
 {
   return m_mandatory;
+}
+
+CmdLineParameter & CmdLineParameter::global()
+{
+  m_global = true;
+  return (*this);
+}
+
+bool CmdLineParameter::is_global() const
+{
+  return m_global;
 }
 
 bool CmdLineParameter::parse(std::queue<std::string> & arg_queue)

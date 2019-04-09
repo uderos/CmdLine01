@@ -29,10 +29,8 @@ class CmdLineProcessor
                                       const std::size_t idx = 0) const;
 
     std::string help_string(const std::string & header) const;
+    std::string to_string() const;
 
-    std::string to_string() const; // debug purpose only
-
-  protected:
 
   private:
 
@@ -44,6 +42,9 @@ class CmdLineProcessor
     PARAM_T & m_add_parameter(const std::string & long_name);
 
     const CmdLineParameter & m_get_parameter(const std::string & long_name) const;
+    std::vector<std::string> m_parse_cmdline(const int argc, const char *argv[]);
+    bool m_has_global_params() const;
+    void m_check_missing_params() const;
 };
 
 template <typename PARAM_T> 

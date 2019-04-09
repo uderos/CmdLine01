@@ -21,9 +21,6 @@ static void f_test02()
   std::cout << "Parsing command line ..." << std::endl;
   cmdl.parse(argc, argv);
 
-  std::cout << "Dumping on stdout ..." << std::endl;
-  std::cout << "cmdl=" << cmdl.to_string() << std::endl;
-
   std::cout << "Checking values ..." << std::endl;
   std::cout << "Number of flag1 flags=" << cmdl["flag1"].counter() << std::endl;
   std::cout << "arg1 value[0] = " << cmdl.get_value<int>("arg1") << std::endl;
@@ -46,8 +43,6 @@ static void f_test01()
   std::cout << "Parsing command line ..." << std::endl;
   cmdl.parse(argc, argv);
 
-  std::cout << "Dumping on stdout ..." << std::endl;
-  std::cout << "cmdl=" << cmdl.to_string() << std::endl;
 }
 
 

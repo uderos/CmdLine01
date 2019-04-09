@@ -15,12 +15,14 @@ class CmdLineParameter
     virtual ~CmdLineParameter() = default;
 
     // Set properties
-    CmdLineParameter & short_name(const std::string & short_name);
-    CmdLineParameter & mandatory();
+    virtual CmdLineParameter & short_name(const std::string & short_name);
+    virtual CmdLineParameter & mandatory();
     virtual CmdLineParameter & default_value(const std::string & default_value) = 0;
+    virtual CmdLineParameter & global();
 
     // Queries
-    const bool is_mandatory() const;
+    virtual bool is_mandatory() const;
+    virtual bool is_global() const;
     virtual unsigned int counter() const = 0;
     virtual bool has_value(const std::size_t idx = 0) const = 0;
     virtual const std::string & get_value_str(const std::size_t idx = 0) const = 0;
@@ -48,6 +50,7 @@ class CmdLineParameter
     const std::string m_long_name;
     std::string m_short_name;
     bool m_mandatory;
+    bool m_global;
 
     virtual bool m_value_parsing_required() const = 0;
     parsing_data_t m_parse_tokens(std::queue<std::string> & arg_queue) const;

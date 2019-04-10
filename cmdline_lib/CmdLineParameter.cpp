@@ -47,6 +47,8 @@ bool CmdLineParameter::is_global() const
 
 bool CmdLineParameter::parse(std::queue<std::string> & arg_queue)
 {
+  if (arg_queue.empty()) return false;
+
   try
   {
     const parsing_data_t data = m_parse_tokens(arg_queue);
@@ -71,6 +73,8 @@ bool CmdLineParameter::parse(std::queue<std::string> & arg_queue)
 CmdLineParameter::parsing_data_t 
 CmdLineParameter::m_parse_tokens(std::queue<std::string> & arg_queue) const
 {
+  if (arg_queue.empty()) return parsing_data_t();
+
   const std::string long_name = std::string("--") + m_long_name;
   const std::string short_name = (m_short_name.empty() ? m_short_name : std::string("-") + m_short_name);
 
@@ -134,7 +138,7 @@ std::string CmdLineParameter::help_string() const
   oss << "--" << m_long_name;
 
   if (!m_short_name.empty())
-    oss << "(-" << m_short_name << ")";
+    oss << " (-" << m_short_name << ")";
 
   m_help_string(oss);
 

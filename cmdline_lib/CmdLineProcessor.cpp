@@ -103,10 +103,20 @@ const CmdLineParameter & CmdLineProcessor::m_get_parameter(const std::string & l
 
 std::string CmdLineProcessor::help_string(const std::string & header) const
 {
+  std::map<std::string, std::string> mandatory_params, optional_params;
+  for (const auto & elem : m_param_map)
+    if (elem.second->is_mandatory())
+      mandatory_params[elem.first] = elem.second->help_string();
+    else
+      optional_params[elem.first] = elem.second->help_string();
+
   std::ostringstream oss;
   oss << header << std::endl;
-  for (const auto & elem : m_param_map)
-    oss << '\t' << elem.second->help_string() << std::endl;
+  oss << "Command Line Parameters:" << std::endl;
+  for (const auto & msg : mandatory_params) 
+    oss << '\t' << msg.second << std::endl;
+  for (const auto & msg : optional_params) 
+    oss << '\t' << msg.second << std::endl;
   return oss.str();
 }
 

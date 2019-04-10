@@ -41,7 +41,6 @@ class CmdLineParameter
       bool value_found;
       std::string value;
       parsing_data_t() : name_found(false), value_found(false) {};
-      ~parsing_data_t() = default;
     };
 
     const std::string & m_get_long_name() const;

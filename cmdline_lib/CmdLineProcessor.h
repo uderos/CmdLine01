@@ -26,8 +26,6 @@ class CmdLineProcessor
 
     // Queries
     const CmdLineParameter & operator[](const std::string & long_name) const;
-    bool has_value(const std::string & long_name,
-                   const std::size_t idx = 0) const;
     template <typename T> T get_value(const std::string & long_name,
                                       const std::size_t idx = 0) const;
 

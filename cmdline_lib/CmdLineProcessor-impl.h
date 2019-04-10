@@ -1,11 +1,8 @@
 #ifndef UDR_CMDLINE_CLDLINE_PROCESSOR_IMPL_H
 #define UDR_CMDLINE_CLDLINE_PROCESSOR_IMPL_H
 
-#include "CmdLineArgument.h"
-#include "CmdLineFlag.h"
-
-namespace udr {
-namespace cmdline {
+//namespace udr {
+//namespace cmdline {
 
 
 template <typename PARAM_T> 
@@ -47,6 +44,7 @@ T CmdLineProcessor::get_value(const std::string & long_name,
   return value;
 }
 
-} // namepspace cmdline
-} // namespace udr
+//} // namepspace cmdline
+//} // namespace udr
+
 #endif // UDR_CMDLINE_CLDLINE_PROCESSOR_IMPL_H

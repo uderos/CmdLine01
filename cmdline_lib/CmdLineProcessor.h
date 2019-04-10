@@ -51,10 +51,10 @@ class CmdLineProcessor
     void m_check_missing_params() const;
 };
 
-// Template and inline method implementations
-#include "CmdLineProcessor-impl.h"
-
 } // namepspace cmdline
 } // namespace udr
+
+// Template and inline method implementations
+#include "CmdLineProcessor-impl.h"
 
 #endif // UDR_CMDLINE_CLDLINE_PROCESSOR_H

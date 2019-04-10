@@ -3,13 +3,14 @@
 
 #include <map>
 #include <memory>
-#include <sstream>
-#include <stdexcept>
-#include "CmdLineArgument.h"
-#include "CmdLineFlag.h"
+#include <vector>
 
 namespace udr {
 namespace cmdline {
+
+class CmdLineParameter;
+class CmdLineArgument;
+class CmdLineFlag;
 
 class CmdLineProcessor
 {
@@ -21,13 +22,17 @@ class CmdLineProcessor
     CmdLineArgument & AddArgument(const std::string & long_name);
     CmdLineFlag & AddFlag(const std::string & long_name);
 
-    // Infrastructure
+    // Operations
     std::vector<std::string> parse(const int argc, const char *argv[]);
 
+    // Queries
     const CmdLineParameter & operator[](const std::string & long_name) const;
+    bool has_value(const std::string & long_name,
+                   const std::size_t idx = 0) const;
     template <typename T> T get_value(const std::string & long_name,
                                       const std::size_t idx = 0) const;
 
+    // Infrastructure and utils
     std::string help_string(const std::string & header) const;
     std::string to_string() const;
 
@@ -47,46 +52,49 @@ class CmdLineProcessor
     void m_check_missing_params() const;
 };
 
-template <typename PARAM_T> 
-PARAM_T & CmdLineProcessor::m_add_parameter(const std::string & long_name)
-{
-  if (m_param_map.find(long_name) != m_param_map.end())
-  {
-    std::ostringstream oss;
-    oss << "Duplicated CmdLine argument: " << long_name;
-    throw std::runtime_error(oss.str());
-  }
-
-  PARAM_T * new_param_ptr = new PARAM_T(long_name);
-  m_param_map[long_name] = std::unique_ptr<PARAM_T>(new_param_ptr);
-  return (*new_param_ptr);
-}
-
-template <typename T> 
-T CmdLineProcessor::get_value(const std::string & long_name,
-                              const std::size_t idx /*= 0*/) const
-{
-  const CmdLineParameter & p = m_get_parameter(long_name);
-  const std::string & value_str =p.get_value_str(idx);
-
-  T value;
-  std::istringstream iss(value_str);
-  iss >> value;
-
-  if (!iss)
-  {
-    std::ostringstream oss;
-    oss << "CmdLine: Argument:'" << long_name << "' conversion failure"
-        << " idx:" << idx
-        << " str='" << value_str << "'"
-        << " type=" << typeid(T).name();
-    throw std::runtime_error(oss.str());
-  }
-
-  return value;
-}
-
+//template <typename PARAM_T> 
+//PARAM_T & CmdLineProcessor::m_add_parameter(const std::string & long_name)
+//{
+//  if (m_param_map.find(long_name) != m_param_map.end())
+//  {
+//    std::ostringstream oss;
+//    oss << "Duplicated CmdLine argument: " << long_name;
+//    throw std::runtime_error(oss.str());
+//  }
+//
+//  PARAM_T * new_param_ptr = new PARAM_T(long_name);
+//  m_param_map[long_name] = std::unique_ptr<PARAM_T>(new_param_ptr);
+//  return (*new_param_ptr);
+//}
+//
+//template <typename T> 
+//T CmdLineProcessor::get_value(const std::string & long_name,
+//                              const std::size_t idx /*= 0*/) const
+//{
+//  const CmdLineParameter & p = m_get_parameter(long_name);
+//  const std::string & value_str =p.get_value_str(idx);
+//
+//  T value;
+//  std::istringstream iss(value_str);
+//  iss >> value;
+//
+//  if (!iss)
+//  {
+//    std::ostringstream oss;
+//    oss << "CmdLine: Argument:'" << long_name << "' conversion failure"
+//        << " idx:" << idx
+//        << " str='" << value_str << "'"
+//        << " type=" << typeid(T).name();
+//    throw std::runtime_error(oss.str());
+//  }
+//
+//  return value;
+//}
 
 } // namepspace cmdline
 } // namespace udr
+
+// Template and inline method implementations
+#include "CmdLineProcessor-impl.h"
+
 #endif // UDR_CMDLINE_CLDLINE_PROCESSOR_H

@@ -35,6 +35,12 @@ std::vector<std::string> CmdLineProcessor::parse(const int argc, const char *arg
   return unprocessed_list;
 }
 
+bool CmdLineProcessor::has_value(const std::string & long_name,
+                                 const std::size_t idx /*=0*/) const
+{
+  return m_get_parameter(long_name).has_value(idx);
+}
+
 std::vector<std::string> CmdLineProcessor::m_parse_cmdline(const int argc, const char *argv[])
 {
   std::queue<std::string> arg_queue;

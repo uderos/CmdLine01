@@ -1,9 +1,12 @@
 #include <iostream>
 #include <stdexcept>
+#include <string>
+#include <vector>
 
 #include "cmdline_lib/CmdLineProcessor.h"
 
 using uint = unsigned int;
+using str_list_t = std::vector<std::string>;
 
 static void f_cmdline_config(udr::cmdline::CmdLineProcessor & cmdl)
 {
@@ -13,6 +16,34 @@ static void f_cmdline_config(udr::cmdline::CmdLineProcessor & cmdl)
   cmdl.AddArgument("numerator").short_name("n").mandatory();
   cmdl.AddArgument("denominator").short_name("d").default_value("1");
   cmdl.AddArgument("arg").short_name("a").default_value("1");
+}
+
+static void f_print_values(const str_list_t & names,
+                           const udr::cmdline::CmdLineProcessor & cmdl)
+{
+  static constexpr std::size_t NUM_VALUES = 3;
+  for (const auto & name : names)
+  {
+    for (std::size_t idx = 0; idx < NUM_VALUES; ++idx)
+    {
+      std::cout << "Parameter '" << name << "' idx=" << idx;
+      const bool found = (idx < cmdl[name].counter());
+      std::cout << (found ? " found" : " (not found)");
+      if (found)
+      {
+        const bool has_value = cmdl.has_value(name, idx);
+        if (has_value)
+        {
+          std::cout << " value='" << cmdl[name].get_value_str(idx) << "'";
+        }
+        else
+        {
+          std::cout << " (no value)";
+        }
+      }
+      std::cout << std::endl;
+    }
+  }
 }
 
 int main(const int argc, const char *argv[])
@@ -34,6 +65,11 @@ int main(const int argc, const char *argv[])
 
     for (const auto u : unprocessed)
       std::cout << "Unprocessed parameter: " << u << std::endl;
+
+    const str_list_t names { "version", "help", "verbose", "numerator", 
+                             "denominator", "arg" };
+    f_print_values(names, cmdl);
+
   }
   catch (const std::exception & exh)
   {

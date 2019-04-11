@@ -18,13 +18,13 @@ class CmdLineFlag : public CmdLineParameter
     // Queries
     virtual bool has_value(const std::size_t idx = 0) const override;
     virtual const std::string & get_value_str(const std::size_t idx = 0) const override;
-    virtual unsigned int counter() const;
+    virtual unsigned int counter() const override;
 
   private:
     unsigned int m_counter;
 
     virtual bool m_value_parsing_required() const override;
-    virtual void m_process_tokens(const parsing_data_t & data);
+    virtual void m_process_tokens(const parsing_data_t & data) override;
     virtual void m_help_string(std::ostream & os) const override;
 };
 

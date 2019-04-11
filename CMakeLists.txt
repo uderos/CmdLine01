@@ -1,6 +1,9 @@
 cmake_minimum_required (VERSION 2.8.11)
 
-SET(CMAKE_CXX_FLAGS  "${CMAKE_CXX_FLAGS} -std=c++14 -lpthread -Wall -Werror ")
+SET(CMAKE_CXX_FLAGS  "${CMAKE_CXX_FLAGS} -std=c++14 -Wall -Werror ")
+if (LINUX)
+	SET(CMAKE_CXX_FLAGS  "${CMAKE_CXX_FLAGS} -lpthread")
+endif (LINUX)
 
 SET(CMAKE_BUILD_TYPE Debug)
 #SET(CMAKE_BUILD_TYPE Release)

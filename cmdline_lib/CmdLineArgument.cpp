@@ -33,21 +33,15 @@ void CmdLineArgument::m_process_tokens(const parsing_data_t & data)
 
 const std::string & CmdLineArgument::get_value_str(const std::size_t idx /*=0*/) const
 {
-  const std::string * value_str_ptr = nullptr;
-
   if (idx < m_value_str_list.size())
-    value_str_ptr = &(m_value_str_list[idx]);
-  else if ((idx == 0) && (!m_default_value_str.empty()))
-    value_str_ptr = &(m_default_value_str);
+    return m_value_str_list[idx];
 
-  if (!value_str_ptr)
-  {
-    std::ostringstream oss;
-    oss << "CmdLine: Value_" << idx << " not found for parameter " << m_get_long_name();
-    throw std::runtime_error(oss.str());
-  }
+  if ((idx == 0) && (!m_default_value_str.empty()))
+    return m_default_value_str;
 
-  return (*value_str_ptr);
+  std::ostringstream oss;
+  oss << "CmdLine: Value_" << idx << " not found for parameter " << m_get_long_name();
+  throw std::runtime_error(oss.str());
 }
 
 bool CmdLineArgument::has_value(const std::size_t idx /*=0*/) const

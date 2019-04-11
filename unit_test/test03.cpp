@@ -26,21 +26,14 @@ static void f_print_values(const str_list_t & names,
   {
     for (std::size_t idx = 0; idx < NUM_VALUES; ++idx)
     {
-      std::cout << "Parameter '" << name << "' idx=" << idx;
       const bool found = (idx < cmdl[name].counter());
+      const bool has_value = cmdl[name].has_value(idx);
+      std::cout << "Parameter '" << name << "' idx=" << idx;
       std::cout << (found ? " found" : " (not found)");
-      if (found)
-      {
-        const bool has_value = cmdl[name].has_value(idx);
-        if (has_value)
-        {
-          std::cout << " value='" << cmdl[name].get_value_str(idx) << "'";
-        }
-        else
-        {
-          std::cout << " (no value)";
-        }
-      }
+      if (has_value)
+        std::cout << " value='" << cmdl[name].get_value_str(idx) << "'";
+      else
+        std::cout << " (no value)";
       std::cout << std::endl;
     }
   }

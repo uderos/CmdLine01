@@ -73,13 +73,31 @@ bool CmdLineParameter::parse(std::queue<std::string> & arg_queue)
 CmdLineParameter::parsing_data_t 
 CmdLineParameter::m_parse_tokens(std::queue<std::string> & arg_queue) const
 {
-  if (arg_queue.empty()) return parsing_data_t();
+  parsing_data_t parsing_data;
+
+  if (! arg_queue.empty())
+  {
+    std::string::size_type value_idx = std::string::npos;
+    m_parse_tokens_name(arg_queue, parsing_data, value_idx);
+    m_parse_tokens_value(arg_queue, parsing_data, value_idx);
+
+    if (parsing_data.name_found && (!arg_queue.empty()))
+      arg_queue.pop();
+  }
+
+  return parsing_data;
+}
+
+
+void CmdLineParameter::m_parse_tokens_name(
+  std::queue<std::string> & arg_queue,
+  parsing_data_t & parsing_data,
+  std::string::size_type & value_idx) const
+{
+  if (arg_queue.empty()) throw std::runtime_error(__FUNCTION__); // unexpected
 
   const std::string long_name = std::string("--") + m_long_name;
   const std::string short_name = (m_short_name.empty() ? m_short_name : std::string("-") + m_short_name);
-
-  parsing_data_t parsing_data;
-  std::string::size_type value_idx = std::string::npos;
 
   const auto long_name_idx = arg_queue.front().find(long_name);
 
@@ -106,11 +124,17 @@ CmdLineParameter::m_parse_tokens(std::queue<std::string> & arg_queue) const
         value_idx = 0;
     }
   }
+}
 
+void CmdLineParameter::m_parse_tokens_value(
+  const std::queue<std::string> & arg_queue,
+  parsing_data_t & parsing_data,
+  const std::string::size_type value_idx) const
+{
   if (m_value_parsing_required() &&
       parsing_data.name_found && 
       (value_idx != std::string::npos) &&
-      (!arg_queue.empty())) // redundant 
+      (!arg_queue.empty()))
   {
     if (value_idx < arg_queue.front().size())
     {
@@ -122,11 +146,6 @@ CmdLineParameter::m_parse_tokens(std::queue<std::string> & arg_queue) const
       throw std::runtime_error("Value parsing error");
     }
   }
-
-  if (parsing_data.name_found && (!arg_queue.empty()))
-    arg_queue.pop();
-
-  return parsing_data;
 }
 
 std::string CmdLineParameter::help_string() const

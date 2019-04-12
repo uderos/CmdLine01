@@ -20,6 +20,9 @@ class CmdLineParameter
     virtual CmdLineParameter & default_value(const std::string & default_value) = 0;
     virtual CmdLineParameter & global();
 
+    // Command line parsing
+    bool parse(std::queue<std::string> & arg_queue);
+
     // Queries
     virtual bool is_mandatory() const;
     virtual bool is_global() const;
@@ -28,7 +31,6 @@ class CmdLineParameter
     virtual const std::string & get_value_str(const std::size_t idx = 0) const = 0;
 
     // Infrastructure
-    bool parse(std::queue<std::string> & arg_queue);
     std::string help_string() const;
 
   protected:
@@ -52,7 +54,17 @@ class CmdLineParameter
     bool m_global;
 
     virtual bool m_value_parsing_required() const = 0;
+
     parsing_data_t m_parse_tokens(std::queue<std::string> & arg_queue) const;
+
+    void m_parse_tokens_name(std::queue<std::string> & arg_queue, 
+                             parsing_data_t & parsing_data, 
+                             std::string::size_type & value_idx) const;
+
+    void m_parse_tokens_value(const std::queue<std::string> & arg_queue,
+                              parsing_data_t & parsing_data, 
+                              const std::string::size_type value_idx) const;
+
     virtual void m_process_tokens(const parsing_data_t & data) = 0;
 
     virtual void m_help_string(std::ostream & os) const = 0;

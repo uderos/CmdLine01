@@ -12,10 +12,10 @@ static void f_cmdline_config(udr::cmdline::CmdLineProcessor & cmdl)
 {
   cmdl.AddFlag("version").short_name("v");
   cmdl.AddFlag("help").short_name("h").global();
-  cmdl.AddArgument("verbose").short_name("V").default_value("1");
   cmdl.AddArgument("numerator").short_name("n").mandatory();
   cmdl.AddArgument("denominator").short_name("d").default_value("1");
   cmdl.AddArgument("arg").short_name("a").default_value("1");
+  cmdl.AddArgument("input-file").short_name("f");
 }
 
 static void f_print_values(const str_list_t & names,
@@ -59,8 +59,8 @@ int main(const int argc, const char *argv[])
     for (const auto u : unprocessed)
       std::cout << "Unprocessed parameter: " << u << std::endl;
 
-    const str_list_t names { "version", "help", "verbose", "numerator", 
-                             "denominator", "arg" };
+    const str_list_t names { "version", "help", "numerator", 
+                             "denominator", "arg", "input-file" };
     f_print_values(names, cmdl);
 
   }
